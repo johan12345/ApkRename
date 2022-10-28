@@ -74,7 +74,7 @@ public class AndroidManifestBinaryXml_ChangePackageName {
 		@Override
 		public NodeVisitor child(String ns, String name) {
 			// LOG(level + "<" + name + ">");
-			if (needRemoveConflict && ("original-package".equals(name) || "provider".equals(name) || "permission".equals(name)) && ns == null) {
+			if (needRemoveConflict && ("original-package".equals(name) /*|| "provider".equals(name)*/ || "permission".equals(name)) && ns == null) {
 				LOG("x   " + level + "<" + name + "> will be removed");
 				changed = true;
 				return null;
@@ -111,6 +111,10 @@ public class AndroidManifestBinaryXml_ChangePackageName {
 				name = null;
 			} else if (needRemoveConflict && ("coreApp".equals(name)) && ns == null) {
 				name = null;
+			} else if (needRemoveConflict && "authorities".equals(name)) {
+				if (((String) val).startsWith(oldPackageName)) {
+					val = ((String) val).replace(oldPackageName, newPackageFullName);
+				}
 			}
 
 			if (name != oldName || val != oldVal) {
